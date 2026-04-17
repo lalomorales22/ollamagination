@@ -1,7 +1,7 @@
-# OLLAMAGINATION
+
 <img width="1536" height="1024" alt="ChatGPT Image Apr 17, 2026, 04_05_18 PM" src="https://github.com/user-attachments/assets/03b87ddc-d6fb-4703-b1b2-7fb3b5535d4c" />
 
-
+# OLLAMAGINATION
 **AI Image Generation Gallery** powered by [Ollama](https://ollama.com) -- create, curate, and animate AI-generated art entirely on your local machine.
 
 ---
