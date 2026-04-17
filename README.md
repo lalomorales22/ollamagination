@@ -1,4 +1,6 @@
 # OLLAMAGINATION
+<img width="1536" height="1024" alt="ChatGPT Image Apr 17, 2026, 04_05_18 PM" src="https://github.com/user-attachments/assets/03b87ddc-d6fb-4703-b1b2-7fb3b5535d4c" />
+
 
 **AI Image Generation Gallery** powered by [Ollama](https://ollama.com) -- create, curate, and animate AI-generated art entirely on your local machine.
 
@@ -75,8 +77,9 @@ npm install
 
 2. Pull the models you want to use (if you haven't already):
    ```bash
-   ollama pull gemma3
-   ollama pull llama3
+   ollama pull x/z-image-turbo:latest
+   ollama pull x/flux2-klein:4b
+   ollama pull x/flux2-klein:9b
    ```
 
 3. Start Ollamagination:
