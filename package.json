@@ -1,0 +1,14 @@
+{
+  "name": "dreamforge",
+  "version": "1.0.0",
+  "description": "DreamForge - AI Image Generation Studio",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "express": "^5.1.0",
+    "omggif": "^1.0.10",
+    "pngjs": "^7.0.0"
+  }
+}

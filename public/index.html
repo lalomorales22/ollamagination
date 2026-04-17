@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>OLLAMAGINATION</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body>
+  <div id="app">
+    <!-- ═══ Header ═══ -->
+    <header id="header">
+      <div class="header-left">
+        <div class="logo">
+          <svg class="yin-yang" viewBox="0 0 100 100" width="32" height="32">
+            <circle cx="50" cy="50" r="48" fill="none" stroke="rgba(255,255,255,0.15)" stroke-width="2"/>
+            <path d="M50 2 A48 48 0 0 1 50 98 A24 24 0 0 1 50 50 A24 24 0 0 0 50 2" fill="rgba(255,255,255,0.9)"/>
+            <circle cx="50" cy="26" r="6" fill="#0a0a12"/>
+            <circle cx="50" cy="74" r="6" fill="rgba(255,255,255,0.9)"/>
+          </svg>
+          <span class="logo-text">OLLAMAGINATION</span>
+        </div>
+      </div>
+      <nav id="nav">
+        <button class="nav-btn active" data-view="create">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 8v8M8 12h8"/></svg>
+          Create
+        </button>
+        <button class="nav-btn" data-view="auto">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/></svg>
+          Auto Mode
+        </button>
+        <button class="nav-btn" data-view="comic">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="9" rx="1"/><rect x="14" y="3" width="7" height="5" rx="1"/><rect x="14" y="12" width="7" height="9" rx="1"/><rect x="3" y="16" width="7" height="5" rx="1"/></svg>
+          Comic Studio
+        </button>
+        <button class="nav-btn" data-view="editor">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15.6 11.6L22 7v10l-6.4-4.5"/><rect x="2" y="5" width="14" height="14" rx="2"/></svg>
+          Editor
+        </button>
+        <button class="nav-btn" data-view="gallery">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>
+          Gallery
+        </button>
+      </nav>
+      <div class="header-right">
+        <div class="model-select-group">
+          <div class="model-select-wrap">
+            <label>Image</label>
+            <select id="imageModel"></select>
+          </div>
+          <div class="model-select-wrap">
+            <label>Chat</label>
+            <select id="chatModel"></select>
+          </div>
+        </div>
+        <div id="ollamaStatus" class="status-dot" title="Ollama Status"></div>
+      </div>
+    </header>
+
+    <!-- ═══ Queue Status Bar ═══ -->
+    <div id="queueBar" class="queue-bar" style="display:none">
+      <div class="queue-progress">
+        <div class="queue-progress-fill" id="queueProgressFill"></div>
+      </div>
+      <span id="queueLabel" class="queue-label">Ready</span>
+      <span id="queueCount" class="queue-count"></span>
+    </div>
+
+    <!-- ═══ Main Content ═══ -->
+    <main id="main">
+
+      <!-- ── Create View ── -->
+      <section id="view-create" class="view active">
+        <div class="create-layout">
+          <div class="panel yin-panel">
+            <div class="panel-header">
+              <h2>Vision</h2>
+              <span class="panel-sub">Set your intention</span>
+            </div>
+            <div class="prompt-area">
+              <textarea id="promptInput" placeholder="Describe your vision... what do you want to create?" rows="4"></textarea>
+              <button id="enhancePromptBtn" class="btn-enhance" title="Use AI to enhance your prompt">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+                AI Enhance
+              </button>
+            </div>
+            <div class="style-section">
+              <div class="style-header">
+                <h3>Style Presets</h3>
+                <input type="search" id="styleSearch" placeholder="Search 120+ styles..." class="style-search">
+              </div>
+              <div class="style-categories" id="styleCategories"></div>
+              <div class="style-grid" id="styleGrid"></div>
+            </div>
+            <button id="generateBtn" class="btn-primary btn-generate">
+              <span class="btn-text">Generate</span>
+              <span class="btn-loading" style="display:none">
+                <span class="spinner"></span> <span id="generateStatus">Generating...</span>
+              </span>
+            </button>
+            <div id="createProgress" class="inline-progress" style="display:none">
+              <div class="inline-progress-bar"><div class="inline-progress-fill pulse-anim" id="createProgressFill"></div></div>
+            </div>
+          </div>
+
+          <div class="panel yang-panel">
+            <div class="panel-header">
+              <h2>Manifestation</h2>
+              <span class="panel-sub">Your creation appears</span>
+            </div>
+            <div id="previewArea" class="preview-area">
+              <div class="preview-empty">
+                <svg class="yin-yang preview-icon" viewBox="0 0 100 100" width="80" height="80">
+                  <circle cx="50" cy="50" r="48" fill="none" stroke="rgba(255,255,255,0.08)" stroke-width="2"/>
+                  <path d="M50 2 A48 48 0 0 1 50 98 A24 24 0 0 1 50 50 A24 24 0 0 0 50 2" fill="rgba(255,255,255,0.06)"/>
+                  <circle cx="50" cy="26" r="6" fill="rgba(10,10,18,0.5)"/>
+                  <circle cx="50" cy="74" r="6" fill="rgba(255,255,255,0.06)"/>
+                </svg>
+                <p>Your creation will manifest here</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ── Auto Mode View ── -->
+      <section id="view-auto" class="view">
+        <div class="auto-layout">
+          <div class="panel auto-config-panel">
+            <div class="panel-header">
+              <h2>Auto Generation</h2>
+              <span class="panel-sub">Set it and dream</span>
+            </div>
+            <div class="form-group">
+              <label>Generation Type</label>
+              <select id="autoType">
+                <option value="random">Random Exploration</option>
+                <option value="themed">Themed Collection</option>
+                <option value="style-explore">Style Exploration</option>
+                <option value="prompt-chain">Prompt Chain (AI Evolves)</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Theme / Direction</label>
+              <textarea id="autoTheme" placeholder="Describe the theme, mood, or direction for the AI..." rows="3"></textarea>
+            </div>
+            <div class="form-row">
+              <div class="form-group half">
+                <label>Include</label>
+                <input id="autoInclude" placeholder="Elements to include...">
+              </div>
+              <div class="form-group half">
+                <label>Exclude</label>
+                <input id="autoExclude" placeholder="Elements to avoid...">
+              </div>
+            </div>
+            <div class="form-group">
+              <label>Styles <span class="muted">(click to select multiple)</span></label>
+              <div class="auto-style-grid" id="autoStyleGrid"></div>
+            </div>
+            <div class="form-group">
+              <label>Number of Images</label>
+              <input type="number" id="autoCount" value="20" min="1" max="1000">
+            </div>
+            <div class="auto-controls">
+              <button id="startAutoBtn" class="btn-primary">Start Auto Generation</button>
+              <button id="stopAutoBtn" class="btn-danger" style="display:none">Stop</button>
+            </div>
+          </div>
+
+          <div class="panel auto-preview-panel">
+            <div class="panel-header">
+              <h2>Live Feed</h2>
+              <span class="panel-sub" id="autoStatus">Waiting to start...</span>
+            </div>
+            <div id="autoProgress" class="progress-bar-wrap" style="display:none">
+              <div class="progress-bar"><div class="progress-fill" id="autoProgressFill"></div></div>
+              <span class="progress-text" id="autoProgressText">0 / 0</span>
+            </div>
+            <div id="autoGrid" class="auto-image-grid"></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ── Comic Studio View ── -->
+      <section id="view-comic" class="view">
+        <div class="comic-layout">
+          <div class="panel comic-config-panel">
+            <div class="panel-header">
+              <h2>Comic Studio</h2>
+              <span class="panel-sub">AI-powered storytelling</span>
+            </div>
+            <div class="form-group">
+              <label>Comic Title</label>
+              <input id="comicTitle" placeholder="Enter your comic title...">
+            </div>
+            <div class="form-group">
+              <label>Story Theme</label>
+              <textarea id="comicTheme" placeholder="Describe the story, characters, and setting..." rows="4"></textarea>
+              <button id="enhanceComicBtn" class="btn-enhance" title="Use AI to enhance your story theme">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+                AI Enhance
+              </button>
+            </div>
+            <div class="form-row">
+              <div class="form-group half">
+                <label>Pages</label>
+                <input type="number" id="comicPages" value="6" min="1" max="100">
+              </div>
+              <div class="form-group half">
+                <label>Art Style</label>
+                <select id="comicStyle"></select>
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-group half">
+                <label>Include</label>
+                <input id="comicInclude" placeholder="Must have...">
+              </div>
+              <div class="form-group half">
+                <label>Exclude</label>
+                <input id="comicExclude" placeholder="Avoid...">
+              </div>
+            </div>
+            <div class="comic-controls">
+              <button id="startComicBtn" class="btn-primary">Generate Comic Book</button>
+              <button id="stopComicBtn" class="btn-danger" style="display:none">Stop</button>
+            </div>
+          </div>
+
+          <div class="panel comic-preview-panel">
+            <div class="panel-header">
+              <h2>Pages</h2>
+              <span class="panel-sub" id="comicStatus">Ready to create...</span>
+            </div>
+            <div id="comicProgress" class="progress-bar-wrap" style="display:none">
+              <div class="progress-bar"><div class="progress-fill" id="comicProgressFill"></div></div>
+              <span class="progress-text" id="comicProgressText">0 / 0</span>
+            </div>
+            <div id="comicGrid" class="comic-page-grid"></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ── Editor View ── -->
+      <section id="view-editor" class="view">
+        <div class="editor-layout">
+          <div class="panel editor-sidebar">
+            <div class="panel-header">
+              <h2>Frames</h2>
+              <span class="panel-sub">Build your animation</span>
+            </div>
+            <button id="addFrameBtn" class="btn-small" style="width:100%;margin-bottom:12px">+ Add Frame from Gallery</button>
+            <div id="editorFrameList" class="editor-frame-list"></div>
+            <div class="editor-sidebar-controls">
+              <div class="form-group">
+                <label>Frame Duration (ms)</label>
+                <input type="number" id="frameDuration" value="2000" min="200" max="10000" step="100">
+              </div>
+              <div class="form-group">
+                <label>Transition</label>
+                <select id="frameTransition">
+                  <option value="cut">Cut</option>
+                  <option value="fade">Fade</option>
+                  <option value="slide-left">Slide Left</option>
+                  <option value="slide-right">Slide Right</option>
+                  <option value="zoom">Zoom</option>
+                </select>
+              </div>
+            </div>
+          </div>
+          <div class="panel editor-canvas-panel">
+            <div class="panel-header">
+              <h2>Canvas</h2>
+              <span class="panel-sub" id="editorStatus">Add frames to begin</span>
+            </div>
+            <div class="editor-toolbar">
+              <button class="btn-small editor-tool active" data-tool="select" title="Select">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 3l7.07 16.97 2.51-7.39 7.39-2.51L3 3z"/></svg>
+              </button>
+              <button class="btn-small editor-tool" data-tool="speech" title="Speech Bubble">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+              </button>
+              <button class="btn-small editor-tool" data-tool="thought" title="Thought Bubble">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="10" r="8"/><circle cx="7" cy="19" r="2"/><circle cx="4" cy="22" r="1"/></svg>
+              </button>
+              <button class="btn-small editor-tool" data-tool="caption" title="Caption/Subtitle">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="15" width="20" height="6" rx="1"/><path d="M6 18h12"/></svg>
+              </button>
+              <button class="btn-small editor-tool" data-tool="text" title="Free Text">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 7V4h16v3M9 20h6M12 4v16"/></svg>
+              </button>
+              <div class="toolbar-separator"></div>
+              <button class="btn-small" id="deleteOverlayBtn" title="Delete Selected">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+              </button>
+            </div>
+            <div id="editorCanvasWrap" class="editor-canvas-wrap">
+              <canvas id="editorCanvas" width="768" height="512"></canvas>
+              <div id="editorOverlayLayer" class="editor-overlay-layer"></div>
+              <div class="editor-empty" id="editorEmpty">
+                <p>Add frames from your gallery to start editing</p>
+              </div>
+            </div>
+            <div class="editor-text-controls" id="editorTextControls" style="display:none">
+              <textarea id="overlayText" placeholder="Enter text..." rows="2"></textarea>
+              <div class="text-control-row">
+                <input type="number" id="overlayFontSize" value="18" min="10" max="72" title="Font size">
+                <input type="color" id="overlayColor" value="#ffffff" title="Text color">
+                <input type="color" id="overlayBgColor" value="#000000" title="Background color">
+                <button class="btn-small" id="applyOverlayBtn">Apply</button>
+              </div>
+            </div>
+          </div>
+          <div class="panel editor-playback-panel">
+            <div class="panel-header">
+              <h2>Playback</h2>
+              <span class="panel-sub">Preview & export</span>
+            </div>
+            <div class="editor-playback-controls">
+              <button class="btn-primary" id="playAnimBtn" style="padding:10px">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21"/></svg>
+                Play
+              </button>
+              <button class="btn-small" id="stopAnimBtn" style="display:none">Stop</button>
+              <div class="form-group" style="margin:8px 0 0">
+                <label>Loop</label>
+                <select id="loopMode">
+                  <option value="once">Play Once</option>
+                  <option value="loop" selected>Loop</option>
+                  <option value="bounce">Bounce (Back & Forth)</option>
+                </select>
+              </div>
+            </div>
+            <div class="editor-timeline" id="editorTimeline"></div>
+            <div style="margin-top:auto;padding-top:12px">
+              <button class="btn-primary" id="exportGifBtn" style="padding:10px">Export as GIF</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ── Gallery View ── -->
+      <section id="view-gallery" class="view">
+        <div class="gallery-header-bar">
+          <h2>Gallery</h2>
+          <div class="gallery-filters">
+            <button class="filter-btn active" data-filter="all">All</button>
+            <button class="filter-btn" data-filter="image">Singles</button>
+            <button class="filter-btn" data-filter="collection">Collections</button>
+            <button class="filter-btn" data-filter="comic">Comics</button>
+          </div>
+          <div class="gallery-stats" id="galleryStats"></div>
+        </div>
+        <div id="galleryGrid" class="gallery-grid"></div>
+        <div id="galleryEmpty" class="gallery-empty">
+          <p>No creations yet. Start generating to fill your gallery.</p>
+        </div>
+      </section>
+    </main>
+
+    <!-- ═══ Status Bar ═══ -->
+    <footer id="footer">
+      <div id="statusText" class="status-text">Ready</div>
+      <div class="footer-stats">
+        <span id="footerStats"></span>
+      </div>
+    </footer>
+
+    <!-- ═══ Image Modal ═══ -->
+    <div id="imageModal" class="modal" style="display:none">
+      <div class="modal-overlay"></div>
+      <div class="modal-content">
+        <button class="modal-close">&times;</button>
+        <img id="modalImage" src="" alt="">
+        <div class="modal-info">
+          <p id="modalPrompt"></p>
+          <div class="modal-meta">
+            <span id="modalModel"></span>
+            <span id="modalDate"></span>
+          </div>
+          <div class="modal-actions">
+            <button class="btn-small" id="modalFavorite">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+              Favorite
+            </button>
+            <button class="btn-small" id="modalSimilar">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4"/></svg>
+              Generate Similar
+            </button>
+            <button class="btn-small" id="modalDownload">Download</button>
+            <button class="btn-small btn-danger-small" id="modalDelete">Delete</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══ Frame Picker Modal ═══ -->
+    <div id="framePickerModal" class="modal" style="display:none">
+      <div class="modal-overlay"></div>
+      <div class="modal-content frame-picker-content">
+        <button class="modal-close">&times;</button>
+        <h3 style="padding:16px 20px 0;font-family:var(--font-display)">Pick a Frame from Gallery</h3>
+        <div id="framePickerGrid" class="frame-picker-grid"></div>
+      </div>
+    </div>
+  </div>
+
+  <script src="/js/presets.js"></script>
+  <script src="/js/app.js"></script>
+</body>
+</html>
